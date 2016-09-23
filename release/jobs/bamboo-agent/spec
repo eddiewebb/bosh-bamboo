@@ -2,7 +2,9 @@
 name: bamboo-agent
 templates:
   bin/bamboo-agent: bin/bamboo-agent
-  bin/safeStop: bin/drain
+  bin/drain: bin/drain
+  bin/modifyAgentConfig.py: bin/modifyAgentConfig
+  bin/agent-api-tasks.sh: bin/agent-api-tasks.sh
   config/bamboo-capabilities.properties: config/bamboo-capabilities.properties
 
 packages:

@@ -19,7 +19,7 @@ export JAVA_HOME=/var/vcap/packages/jdk8/jre
 exec > $LOG_DIR/bamboo.stdout.log
 exec 2> $LOG_DIR/bamboo.stderr.log
 HEAD="==========================================================="
-printf("%s\n%s  %s\n%s",HEAD,`date`,"Agent CTL Script",HEAD)
+printf "%s\n%s  %s\n%s" ${HEAD} "`date +"%Y-%m-%d %T"`" "Agent CTL Script" ${HEAD}
 
 case $1 in
   start)
@@ -48,7 +48,7 @@ case $1 in
             /var/vcap/packages/bamboo-agent/atlassian-bamboo-agent-installer-5.9.7.jar \
             <%= p("server.protocol") %>://<%= p("server.ip") %>:<%= p("server.port") %><%= p("server.context") %>agentServer/ \
             install
-    
+        # set name to something useful
         python modifyAgentConfig.py
     fi
 
