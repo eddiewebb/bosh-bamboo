@@ -1,0 +1,5 @@
+check process bamboo
+  with pidfile /var/vcap/sys/run/bamboo/bamboo.pid
+  start program "/var/vcap/jobs/bamboo/bin/bamboo start"
+  stop program "/var/vcap/jobs/bamboo/bin/bamboo stop"
+  group vcap

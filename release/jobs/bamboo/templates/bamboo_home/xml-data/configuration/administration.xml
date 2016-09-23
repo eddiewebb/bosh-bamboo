@@ -1,0 +1,45 @@
+<AdministrationConfiguration>
+  <myBaseUrl>http://10.45.80.11:8086</myBaseUrl>
+  <myUseGzipCompression>true</myUseGzipCompression>
+  <myInstanceName>Atlassian Bamboo</myInstanceName>
+  <deploymentExpiryEnabled>true</deploymentExpiryEnabled>
+  <myBuildExpiryConfiguration>
+    <myDuration>0</myDuration>
+    <buildsToKeep>0</buildsToKeep>
+    <maxIgnoredLogSize>-1</maxIgnoredLogSize>
+    <expiryTypeNothing>false</expiryTypeNothing>
+    <expiryTypeResult>false</expiryTypeResult>
+    <expiryTypeArtifact>false</expiryTypeArtifact>
+    <expiryTypeBuildLog>false</expiryTypeBuildLog>
+    <enabled>false</enabled>
+  </myBuildExpiryConfiguration>
+  <concurrentBuildConfig>
+    <enabled>false</enabled>
+    <numberConcurrentBuilds>1</numberConcurrentBuilds>
+  </concurrentBuildConfig>
+  <storageLimits>
+    <softLimit>20</softLimit>
+    <hardLimit>25</hardLimit>
+  </storageLimits>
+  <dashboardPageSize>50</dashboardPageSize>
+  <enableSignup>true</enableSignup>
+  <enableAnonymousAccess>true</enableAnonymousAccess>
+  <enableExternalUserManagement>false</enableExternalUserManagement>
+  <enableViewContactDetails>false</enableViewContactDetails>
+  <enableRestrictedAdmin>false</enableRestrictedAdmin>
+  <remoteAgentFunctionEnabled>true</remoteAgentFunctionEnabled>
+  <remoteAgentAuthenticationEnabled>false</remoteAgentAuthenticationEnabled>
+  <auditLoggingEnabled>true</auditLoggingEnabled>
+  <gravatarSupportEnabled>false</gravatarSupportEnabled>
+  <gravatarServerUrl>https://secure.gravatar.com/avatar/</gravatarServerUrl>
+  <systemProperties/>
+  <globalVariables/>
+  <buildHangedInQueueNotificationTimeout>120</buildHangedInQueueNotificationTimeout>
+  <branchDetectionCheckInterval>300</branchDetectionCheckInterval>
+  <xsrfProtectionEnabled>true</xsrfProtectionEnabled>
+  <xsrfAllowsMutativeGets>false</xsrfAllowsMutativeGets>
+  <quarantineConfiguration>
+    <enabled>false</enabled>
+    <expiryOverridable>false</expiryOverridable>
+  </quarantineConfiguration>
+</AdministrationConfiguration>

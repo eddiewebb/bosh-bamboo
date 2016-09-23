@@ -1,0 +1,34 @@
+---
+packages:
+- name: bamboo
+  version: 3e25534bbb4a2d70a1128e5a2350189860070e29
+  fingerprint: 3e25534bbb4a2d70a1128e5a2350189860070e29
+  sha1: 861b75e9b61b0e26ab69abc72118153029e0290a
+  dependencies: []
+- name: bamboo-agent
+  version: 54b119f286d4800888c1e8e942872aaba966ffa6
+  fingerprint: 54b119f286d4800888c1e8e942872aaba966ffa6
+  sha1: 96bbeee809b2224da5a57dd0f0f8ec3f02261011
+  dependencies: []
+- name: jdk8
+  version: c7173f4ff80cc8dbb18dce423b0ebdbb66d0c104
+  fingerprint: c7173f4ff80cc8dbb18dce423b0ebdbb66d0c104
+  sha1: 85b6336e7c7d46e6a93c3b58c8e91008f8a62829
+  dependencies: []
+jobs:
+- name: bamboo
+  version: 75a675053b4642761122751e100ba74a94485b2c
+  fingerprint: 75a675053b4642761122751e100ba74a94485b2c
+  sha1: c7cb7c8d362bb0764e0560a495085c00c0ea87bf
+- name: bamboo-agent
+  version: e6cf220352f3dc0035821b6a5d1348a90fd3e9f1
+  fingerprint: e6cf220352f3dc0035821b6a5d1348a90fd3e9f1
+  sha1: f17dad80b0414066fb85b1d2fec85ab63c872a71
+- name: bamboo-agent-errand
+  version: a97996d16bdb2b38761e5da59d26e1bb6a53fab2
+  fingerprint: a97996d16bdb2b38761e5da59d26e1bb6a53fab2
+  sha1: 06e80f0fac0f0af69968edca2368d8abbfd61133
+commit_hash: '00000000'
+uncommitted_changes: false
+name: bamboo
+version: 0+dev.1

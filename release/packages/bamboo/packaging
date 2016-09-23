@@ -1,0 +1,7 @@
+# abort script on any command that exits with a non zero value
+set -e
+
+tar -xzf $BOSH_COMPILE_TARGET/bamboo/atlassian-bamboo-5.9.7.tar.gz
+cp -a atlassian-bamboo-5.9.7/* $BOSH_INSTALL_TARGET
+
+

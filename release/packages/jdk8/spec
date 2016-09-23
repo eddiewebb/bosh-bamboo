@@ -1,0 +1,7 @@
+---
+name: jdk8
+
+dependencies: []
+
+files:
+- jdk8/OpenJDK-1.8.0.66-x86_64-bin.tar.xz

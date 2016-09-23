@@ -1,0 +1,87 @@
+#!/bin/bash
+#
+#    This is the lifecycle script (ctl) called by monit.
+#     
+#
+
+RUN_DIR=/var/vcap/sys/run/bamboo-agent
+LOG_DIR=/var/vcap/sys/log/bamboo-agent
+mkdir -p $RUN_DIR $LOG_DIR
+chown -R vcap:vcap $RUN_DIR $LOG_DIR
+
+# bamboo agent wrapper sets a PID file we'll use.
+PIDFILE=/var/vcap/data/bamboo-agent/bin/bamboo-agent.pid
+#java needed by start and stop jobs
+export PATH=/var/vcap/packages/jdk8/bin:$PATH
+export JAVA_HOME=/var/vcap/packages/jdk8/jre
+
+
+exec > $LOG_DIR/bamboo.stdout.log
+exec 2> $LOG_DIR/bamboo.stderr.log
+HEAD="==========================================================="
+printf("%s\n%s  %s\n%s",HEAD,`date`,"Agent CTL Script",HEAD)
+
+case $1 in
+  start)
+    echo "starting..."
+    export BAMBOO_HOME=/var/vcap/data/bamboo-agent
+    mkdir $BAMBOO_HOME
+
+    ## copy confiug files in temapltes
+    mkdir $BAMBOO_HOME/bin
+    cp  /var/vcap/jobs/bamboo-agent/config/bamboo-capabilities.properties /var/vcap/data/bamboo-agent/bin/
+    
+    # if persistent disk has agent config, use it
+    if [ -f /var/vcap/store/bamboo-agent/bamboo-agent.cfg.xml ]; then
+        # existing agent, copy ID & name to emphemeral path
+        cp /var/vcap/store/bamboo-agent/bamboo-agent.cfg.xml /var/vcap/data/bamboo-agent/bamboo-agent.cfg.xml
+    
+        # if manifest enables API, cleanup any previoud tasks/reenable specific agent
+        if [ "<%= p("api.enabled") %>" == "true" ];then
+            source agent-api-tasks.sh
+            completeAgentTaskIfOpen #enabled the still offline agent
+        fi
+    else
+        # run install (not start) to get files in place
+        java -jar \
+            -Dbamboo.home=$BAMBOO_HOME \
+            /var/vcap/packages/bamboo-agent/atlassian-bamboo-agent-installer-5.9.7.jar \
+            <%= p("server.protocol") %>://<%= p("server.ip") %>:<%= p("server.port") %><%= p("server.context") %>agentServer/ \
+            install
+    
+        python modifyAgentConfig.py
+    fi
+
+    java -jar \
+        -Dbamboo.home=$BAMBOO_HOME \
+        /var/vcap/packages/bamboo-agent/atlassian-bamboo-agent-installer-5.9.7.jar \
+        <%= p("server.protocol") %>://<%= p("server.ip") %>:<%= p("server.port") %><%= p("server.context") %>agentServer/
+    
+
+    ;;
+
+  stop)
+    echo "stopping..."
+    # if manifest enables API, disable agent on master and block for idle.
+    if [ "<%= p("api.enabled") %>" == "true" ];then
+        source agent-api-tasks.sh
+        disableAgent #mark agent as disabled to prevent accepting new jobs
+        purgeCapabilities #remove any previously know capaibiltieis (will be detected and set by agent on next start)
+        blockUntilIdle #poll bamboo master until this agent completes open jobs
+    fi
+    #ask agent to shutdown nicely
+    java -jar \
+        /var/vcap/packages/bamboo-agent/atlassian-bamboo-agent-installer-5.9.7.jar \
+         <%= p("server.protocol") %>://<%= p("server.ip") %>:<%= p("server.port") %><%= p("server.context") %>agentServer/ \
+        stop
+    sleep 5
+    kill -9 `cat $PIDFILE`
+    #clear pid
+    rm -f $PIDFILE
+
+    ;;
+
+  *)
+    echo "Usage: ctl {start|stop}" ;;
+
+esac

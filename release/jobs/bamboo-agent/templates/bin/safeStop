@@ -1,0 +1,114 @@
+#!/bin/bash
+
+###
+# IMPORTANT: Drain scripts must have no output, none, except for a 0 exit code and a single integer before exit.
+###
+
+PIDFILE=/var/vcap/data/bamboo-agent/bin/bamboo-agent.pid
+exec 3>&1
+exec > /var/vcap/sys/log/bamboo-agent/drain.out
+exec 2> /var/vcap/sys/log/bamboo-agent/drain.err
+
+
+if [ -d /var/vcap/store ];then
+    echo "Copying live agent config to persistent store"
+    cp /var/vcap/data/bamboo-agent/bamboo-agent.cfg.xml /var/vcap/store/bamboo-agent/bamboo-agent.cfg.xml
+fi
+
+
+
+killJVM(){
+    kill -9 `cat $PIDFILE`
+    #clear pid
+    rm -f $PIDFILE
+}
+
+if [ "<%= p("api.enabled") %>" == "false" ];then
+    echo "Deployment Manifest has disabled use of Agent APIs, this job will immediately shutdown regardless of running work"
+    killJVM
+    echo 0 >&3
+    exit 0
+fi
+
+echo "BOSH Drain Script (/bin/drain) has been called for this agent.  WIll attempt to disable and wait for idle."
+
+
+
+
+#Write Token UUID (Is a token created by Agent APIs for Bamboo authorization.)
+uuid="<%= p("api.token.uuid") %>"
+
+# URl of master server
+bambooUrl="<%= p("server.protocol") %>://<%= p("server.ip") %>:<%= p("server.port") %><%= p("server.context") %>"
+
+# Agent ID can be hard coded, but is easily pulled from the running system
+agentId=`cat /var/vcap/data/bamboo-agent/bamboo-agent.cfg.xml | grep -oPm1 "(?<=<id>)[^<]+"`
+
+# make a tmp dir for cookie jar and other random files we'll make
+TMPDIRD=`mktemp -d /tmp/agentMaintenance.XXXXXX` || exit 1
+# Bamboo api is hokey and even for "anonymous" access you need a cookie with the site info.  Just hit the homepage first
+#  WARNING any other API calls fail without a valid cookie !!!
+curl -k -c $TMPDIRD/cookies "$bambooUrl" > /dev/null 2>&1
+
+
+
+SIBLING_PATIENCE_TIME=60 # will wait 1 minutes between checks for permission
+SIBLING_PATIENCE_COUNT=15 # will repeat 15 times.
+
+let attempts=1
+notifyChaperoneOfShutdown(){
+    curl -H "X-Atlassian-Token:nocheck" -X POST -k -b $TMPDIRD/cookies  "$bambooUrl/rest/agents/latest/$agentId/maintenance?uuid=${uuid}"  -o $TMPDIRD/state.txt 2>/dev/null
+  
+    # MOnitor status until the agent is idle
+    source $TMPDIRD/state.txt
+    if [ "$PCODE" == "YES_CHILD" ]
+    then
+        #server says we can safely shutfown
+        echo "Chaperone is granting request for maintenance"
+        cat $TMPDIRD/state.txt
+        let busyTolerance=60
+        let busyWait=60
+        let busyCount=0
+        while [ "$BUSY" -eq "TRUE" ];do
+            echo "Agent is still performing  a build. Waiting ${busyWait} seconds to check back"
+            let busyCount+=1
+            if [ $busyCount -gt $busyTolerance ];then
+                echo "Exhausted patiencewaiting for build to complete, going offline anyway! This may break an inflight build" &>2
+                BUSY="FALSE"
+            else
+                sleep $busyWait
+            fi
+        done
+        ## SUCCESS
+        cp $TMPDIRD/state.txt /var/vcap/store/bamboo-agent/agent-api-task.sh
+    elif [ "$PCODE" == "WAIT_FOR_SIBLINGS" ]
+    then
+        # allowed to upgrae, but too many others are working right now, check back in a few
+        echo "Master server wants me to wait, this is my $attempts attempt."
+        echo "${PCODE}: ${PMESSAGE}"
+        if [ $attempts -gt $SIBLING_PATIENCE_COUNT ]
+        then
+            echo "Siblings have exhausted my patience. INcrease wait times, offset cycles, or increase concurrency"
+        fi
+        let attempts+=1
+        sleep $SIBLING_PATIENCE_TIME
+        notifyChaperoneOfShutdown #will recurse back into this functuion
+    elif [ "$PCODE" == "NO_CHILD" ]
+    then
+        echo "Master server says I can not upgrade now."
+        ## TODO call disable API and force disable state.
+        ## TODO save task to store
+        echo "$PCODE: $PMESSAGE"
+    elif [ "$PCODE" == "UH_OH" ]
+    then        
+        echo "Error talking to agent APIS. Allowing stop to complete, this is a risk to onging jobs"
+    fi
+  
+}
+  
+notifyChaperoneOfShutdown
+
+
+echo 0 >&3
+exit 0  
+  

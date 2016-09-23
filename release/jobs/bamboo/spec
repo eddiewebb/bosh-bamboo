@@ -1,0 +1,30 @@
+---
+name: bamboo
+templates:
+  bamboo: bin/bamboo
+  bamboo_home/bamboo.cfg.xml: bamboo_home/bamboo.cfg.xml
+  bamboo_home/xml-data/configuration/administration.xml: bamboo_home/xml-data/configuration/administration.xml
+  bamboo_home/xml-data/configuration/crowd.properties: bamboo_home/xml-data/configuration/crowd.properties
+  bamboo_install/bin/setenv.sh: bamboo_install/bin/setenv.sh
+  bamboo_install/conf/server.xml: bamboo_install/conf/server.xml
+  
+packages:
+- jdk8
+- bamboo
+
+
+properties:
+  server.ip:
+    description: The IP address of the Bamboo server
+  server.port:
+    description: The port the Bamboo server is running on
+    default: 8085
+  server.protocol:
+    description: Use http or https on master
+    default: http
+  server.context:
+    description: The server context of bamboo (i.e. /builds). It is important to include both  the leading and trailing slash.
+    default: /
+  bamboo.license:
+    description: The License String for this Bamboo Instance
+    default: AAAA-notlicensed-ZZZ

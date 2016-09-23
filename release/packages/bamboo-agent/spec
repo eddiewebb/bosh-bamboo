@@ -1,0 +1,7 @@
+---
+name: bamboo-agent
+
+dependencies:
+
+files:
+- bamboo/atlassian-bamboo-5.9.7.tar.gz 

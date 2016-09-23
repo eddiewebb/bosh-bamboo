@@ -1,0 +1,11 @@
+# abort script on any command that exits with a non zero value
+set -e
+
+
+# agent jar is within the full installation tar, pull it out.
+
+tar -xzf $BOSH_COMPILE_TARGET/bamboo/atlassian-bamboo-5.9.7.tar.gz
+cp -a atlassian-bamboo-5.9.7/atlassian-bamboo/admin/agent/atlassian-bamboo-agent-installer-5.9.7.jar $BOSH_INSTALL_TARGET/
+
+
+

@@ -1,0 +1,43 @@
+name: bamboo
+director_uuid: 93c01d2d-a2a5-49d8-8d02-389fd223a9cf
+
+releases:
+  - name: bamboo
+    version: latest
+
+stemcells:
+- alias: trusty
+  os: ubuntu-trusty
+  version: latest
+
+update:
+  canaries: 1
+  max_in_flight: 50
+  canary_watch_time: 1000-100000
+  update_watch_time: 1000-100000
+  serial: false
+
+
+instance_groups:
+- name: agents
+  instances: 5
+  # replace with a VM type from your BOSH Director's cloud config
+  vm_type: default
+  persistent_disk_type: default
+  stemcell: trusty
+  azs: [z1]
+  networks: 
+  - name: private
+  jobs:
+  - name: bamboo-agent
+    release: bamboo
+    properties:
+      server:
+        ip: 192.168.50.1 # use the gateway IP configured in virtual box networks.
+        port: 6990
+        protocol: http
+        context: /bamboo/
+      api:
+        enabled: true #only enable APIs if using persistent disk
+        token:
+          uuid: cd94f47f-7659-416c-ac35-c552f4e66f7f  #replaced with an read/write API token for Bamboo-Agent-APIs

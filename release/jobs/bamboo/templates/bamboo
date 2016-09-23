@@ -1,0 +1,54 @@
+#!/bin/bash
+
+RUN_DIR=/var/vcap/sys/run/bamboo
+LOG_DIR=/var/vcap/sys/log/bamboo
+PIDFILE=${RUN_DIR}/bamboo.pid
+
+
+export PATH=/var/vcap/packages/jdk8/bin:$PATH
+export JAVA_HOME=/var/vcap/packages/jdk8
+
+case $1 in
+
+  start)
+    exec > $LOG_DIR/bamboo.stdout.log
+    exec 2> $LOG_DIR/bamboo.stderr.log
+    mkdir -p $RUN_DIR $LOG_DIR
+    chown -R vcap:vcap $RUN_DIR $LOG_DIR
+
+    export CATALINA_PID=$PIDFILE
+    export BAMBOO_HOME=/var/vcap/store/bamboo
+
+    mkdir $BAMBOO_HOME
+
+    #
+    # overlay any customized property files in the home directory
+    #
+    #  This is commented out for initial install, but should be uncommented for ongoing maintenance.
+    #
+    #cp -r /var/vcap/jobs/bamboo/bamboo_home/* /var/vcap/store/bamboo/
+
+    # overlay any customized property files in the install directory
+    cp -r /var/vcap/jobs/bamboo/bamboo_install/* /var/vcap/packages/bamboo/
+
+    #start bamboo
+    /var/vcap/packages/bamboo/bin/startup.sh 
+
+    ;;
+
+  stop)
+    exec > $LOG_DIR/bamboo.stdout.log
+    exec 2> $LOG_DIR/bamboo.stderr.log
+    #nice stop request for bamboo
+    /var/vcap/packages/bamboo/bin/stop-bamboo.sh 
+    sleep 10
+    #esnure java is dead
+    kill -9 `cat $PIDFILE`
+    rm -f $PIDFILE
+
+    ;;
+
+  *)
+    echo "Usage: ctl {start|stop}" ;;
+
+esac

@@ -1,0 +1,28 @@
+---
+name: bamboo-agent
+templates:
+  bin/bamboo-agent: bin/bamboo-agent
+  bin/safeStop: bin/drain
+  config/bamboo-capabilities.properties: config/bamboo-capabilities.properties
+
+packages:
+- jdk8
+- bamboo-agent
+
+properties:
+  server.ip:
+    description: The IP address of the Bamboo server
+  server.port:
+    description: The port the Bamboo server is running on
+    default: 8085
+  server.protocol:
+    description: Use http or https on master
+    default: http
+  server.context:
+    description: The server context of bamboo (i.e. /builds). It is important to include both the leading and trailing slash.
+    default: /
+  api.enabled:
+    description: Whether or not to enable the use of Agent APIs for Bamboo, which supports a richer lifecycle and cleaner automation.
+    default: false
+  api.token.uuid:
+    description: If API is enabled, provide the UUID of a write capable token

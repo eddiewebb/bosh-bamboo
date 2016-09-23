@@ -1,0 +1,5 @@
+# abort script on any command that exits with a non zero value
+set -e
+
+tar -xvf $BOSH_COMPILE_TARGET/jdk8/OpenJDK-1.8.0.66-x86_64-bin.tar.xz
+cp -a OpenJDK-1.8.0.66-x86_64-bin/* $BOSH_INSTALL_TARGET
