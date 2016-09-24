@@ -20,7 +20,7 @@ update:
 
 instance_groups:
 - name: agents
-  instances: 10
+  instances: 2
   # replace with a VM type from your BOSH Director's cloud config
   vm_type: default
   persistent_disk_type: default

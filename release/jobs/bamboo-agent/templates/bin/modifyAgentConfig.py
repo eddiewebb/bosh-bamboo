@@ -6,7 +6,7 @@ specFile = open('/var/vcap/bosh/spec.json')
 spec = load(specFile)
 specFile.close()
 
-if not os.path.isfile('var/vcap/data/bamboo-agent/bamboo-agent.cfg.xml'):
+if not os.path.isfile('/var/vcap/data/bamboo-agent/bamboo-agent.cfg.xml'):
 	root = xml.etree.ElementTree.Element("configuration")
 	buildDir = xml.etree.ElementTree.SubElement(root,"buildWorkingDirectory")
 	buildDir.text = "/var/vcap/data/bamboo-agent/xml-data/build-dir"
