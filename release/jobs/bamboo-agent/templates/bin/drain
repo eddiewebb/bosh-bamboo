@@ -20,10 +20,16 @@ if [ -d /var/vcap/store ];then
     cp /var/vcap/data/bamboo-agent/bamboo-agent.cfg.xml /var/vcap/store/bamboo-agent/bamboo-agent.cfg.xml
 fi
 
+
+echo "Drain called with status: ${1}"
 # if manifest enables API, disable agent on master and block for idle.
 if [ "<%= p("api.enabled") %>" == "true" ];then
     source /var/vcap/jobs/bamboo-agent/bin/agent-api-tasks.sh
-    requestMaintenance
+    if [[ "${1}" == "job_changed" ]];then
+    	requestMaintenance #vm being changed, temp maintennce
+    else
+    	disableAgent #vm being deleted or stopped, not temp. maintenance
+    fi
     blockUntilIdle
 fi
 
