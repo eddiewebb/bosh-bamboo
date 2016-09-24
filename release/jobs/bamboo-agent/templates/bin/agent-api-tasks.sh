@@ -38,11 +38,11 @@ blockUntilIdle(){
 
 
 getStatus(){
-	curl -H "X-Atlassian-Token:nocheck" -X GET -k -b ${TMPDIRD}/cookies "${bambooUrl}rest/agents/latest/${agentId}/state/text?uuid=${uuid}" -o ${TMPDIRD}/state.txt 2>/dev/null	
+	curl -H "X-Atlassian-Token:nocheck" -X GET -k -b ${TMPDIRD}/cookies "${bambooUrl}rest/agents/latest/${agentId}/state/text?uuid=${uuid}" -o ${TMPDIRD}/state.text 2>/dev/null	
 	echo "Status API returned:"
-	cat ${TMPDIRD}/state.txt
+	cat ${TMPDIRD}/state.text
 	echo ""
-	source ${TMPDIRD}/state.txt
+	source ${TMPDIRD}/state.text
 }
 
 
@@ -98,23 +98,22 @@ requestMaintenance(){
         exit 0
     else
         echo "ERROR:  I don't understand server response!"
-        cat ${TMPDIRD}/state.txt
+        cat ${TMPDIRD}/state.text
         exit 0
     fi
 }
 
 completeAgentTaskIfOpen(){
-	TASK=""
 	curl -H "X-Atlassian-Token:nocheck" -X GET -k -b ${TMPDIRD}/cookies "${bambooUrl}rest/agents/latest/${agentId}/maintenance/text?uuid=${uuid}" -o ${TMPDIRD}/openTask.txt 2>/dev/null	
 	source ${TMPDIRD}/openTask.txt
-	if [ "x${TASK}" == "x" ];then
+	if [ ${TASK} -eq 0 ];then
 		echo "No open tasks, normal startup"
 	else
-		echo "Mark open task complete to re-enable this agent."
-		curl -H "X-Atlassian-Token:nocheck" -X PUT -k -b ${TMPDIRD}/cookies "${bambooUrl}rest/agents/latest/${agentId}/maintenance/task/${TASK}/finish?uuid=${uuid}" -o ${TMPDIRD}/state.txt 2>/dev/null	
+		echo "Found open task ${TASK} for this agent, will mark complete."
+		curl -H "X-Atlassian-Token:nocheck" -X PUT -k -b ${TMPDIRD}/cookies "${bambooUrl}rest/agents/latest/${agentId}/maintenance/${TASK}/finish?uuid=${uuid}" -o ${TMPDIRD}/state.text 2>/dev/null	
 		echo "Complete Task API returned:"
-		cat ${TMPDIRD}/state.txt
-		source ${TMPDIRD}/state.txt
+		cat ${TMPDIRD}/state.text
+		source ${TMPDIRD}/state.text
 	fi
 	rm ${TMPDIRD}/openTask.txt
 }
