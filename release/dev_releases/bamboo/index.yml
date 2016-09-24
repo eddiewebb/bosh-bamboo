@@ -30,4 +30,8 @@ builds:
     version: 0+dev.14
   7f26658b-3802-4f53-9437-a619fbacfd8e:
     version: 0+dev.15
+  f3b230a8-4ac3-4594-a2cc-66b0893136d9:
+    version: 0+dev.16
+  f571e2bd-6187-44b8-ad98-21622ee7d612:
+    version: 0+dev.17
 format-version: '2'

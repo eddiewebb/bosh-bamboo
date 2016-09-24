@@ -39,4 +39,10 @@ builds:
   e4a3accddc841fa78c021a3918c63b82c9aa5f8c:
     version: e4a3accddc841fa78c021a3918c63b82c9aa5f8c
     sha1: 7a9c607f7757208492eb1d5f17b613cf3c139730
+  0356a5b4291cc696bc3e378d9359dca5c6dad982:
+    version: 0356a5b4291cc696bc3e378d9359dca5c6dad982
+    sha1: 220bb95d646d5b70d4b8106f8743e1c9f5cde85f
+  27ae4feb38678249eec398997de2cbcdce643bd0:
+    version: 27ae4feb38678249eec398997de2cbcdce643bd0
+    sha1: 2311e86e0808dd27c78dd4143a0e2f2c0c36be8b
 format-version: '2'

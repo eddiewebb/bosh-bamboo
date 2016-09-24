@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# This is the 'drain' called by BOSH before calling monit stop
+#
+#
+# IMPORTANT: Drain scripts must have no output, 
+#  except for:
+#      a single integer (indicating seconds to wait before stop)
+#  must exit with 0 return code as well
+#
+
+# redirect stdout to file, use filehandler 3 for stdout to bosh
+exec 3>&1
+exec > /var/vcap/sys/log/bamboo-agent/drain.out
+exec 2> /var/vcap/sys/log/bamboo-agent/drain.err
+
+if [ -d /var/vcap/store ];then
+    echo "Copying live agent config to persistent store"
+    mkdir -p /var/vcap/store/bamboo-agent/
+    cp /var/vcap/data/bamboo-agent/bamboo-agent.cfg.xml /var/vcap/store/bamboo-agent/bamboo-agent.cfg.xml
+fi
+
+# if manifest enables API, disable agent on master and block for idle.
+if [ "<%= p("api.enabled") %>" == "true" ];then
+    source /var/vcap/jobs/bamboo-agent/bin/agent-api-tasks.sh
+    requestMaintenance
+    blockUntilIdle
+fi
+
+echo 0 >&3
+exit 0  
+  
