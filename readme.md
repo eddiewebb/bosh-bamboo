@@ -13,6 +13,19 @@ THis project uses bosh (big woop, lots do) but layers in the use of Agent APIs f
 
 
 ## bosh-lite / local
+#### Define Virtual Box Network
+At the time of this writing, the VirtualBox CPI for Bosh-lite create a network names vboxnet1 using IP 192.168.54.1. You can not use that network for CPI config. Make sure atleast one other network exists, the IP range should not matter, but our manifest assumes .100.x range.
+
+- Open VirtualBox
+- Choose VirtualBox > Preferences > Network
+- Create new network named vboxnet0 (used by cloud config).
+- Suggested IP address: 192.168.100.1
+- DHCP Server (tab) -> Uncheck Enable Server
+
+#### bosh ssh 
+This will allow bosh-cli to talk to all the containers the director spins up on .100.0/24 
+`sudo route add -net 192.168.100.0/24 192.168.50.4`
+
 #### Bamboo Agent COnfig
 - Enable remote agents
 - Set TCP strong in general connection to match gateway IP from virtual box (192.168.50.1)
@@ -23,6 +36,9 @@ See https://github.com/eddiewebb/concourse-pipeline-bosh-virtualbox for virtual 
 Make sure to run `https://github.com/eddiewebb/concourse-pipeline-bosh-virtualbox` to enable ssh access to agents.
 
 ## NOte
+
+### Networking
+This approach to virtualbox networking is a result of my learnings on https://github.com/eddiewebb/concourse-pipeline-bosh-virtualbox
 
 ### Lifecycle
 https://bosh.io/docs/job-lifecycle.html

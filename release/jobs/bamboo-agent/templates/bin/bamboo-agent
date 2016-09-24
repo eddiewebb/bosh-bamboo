@@ -16,10 +16,18 @@ export PATH=/var/vcap/packages/jdk8/bin:$PATH
 export JAVA_HOME=/var/vcap/packages/jdk8/jre
 
 
-exec > $LOG_DIR/bamboo.stdout.log
-exec 2> $LOG_DIR/bamboo.stderr.log
-HEAD="==========================================================="
-printf "%s\n%s  %s\n%s" ${HEAD} "`date +"%Y-%m-%d %T"`" "Agent CTL Script" ${HEAD}
+
+#send all output from this file to one log.
+logit() { while IFS='' read -r line; do echo "$(date) $line" >> ${LOG_DIR}/bamboo-ctl.log; done; };
+exec > >(logit)
+exec 2>&1
+
+# create alternate stdout and stderr handles for java
+exec 3> $LOG_DIR/bamboo.stdout.log
+exec 4> $LOG_DIR/bamboo.stderr.log
+
+# log time to log file
+echo ">>> Agent CTL Script Called"
 
 case $1 in
   start)
@@ -33,30 +41,35 @@ case $1 in
     
     # if persistent disk has agent config, use it
     if [ -f /var/vcap/store/bamboo-agent/bamboo-agent.cfg.xml ]; then
+        echo "restoring agent config from persistent disk"
         # existing agent, copy ID & name to emphemeral path
         cp /var/vcap/store/bamboo-agent/bamboo-agent.cfg.xml /var/vcap/data/bamboo-agent/bamboo-agent.cfg.xml
     
         # if manifest enables API, cleanup any previoud tasks/reenable specific agent
         if [ "<%= p("api.enabled") %>" == "true" ];then
+            echo "api enabled, closing open tasks and enabling agent"
             source /var/vcap/jobs/bamboo-agent/bin/agent-api-tasks.sh
             completeAgentTaskIfOpen #'tasks' are used by temp. maintenance.
             enableAgent
         fi
     else
         # run install (not start) to get files in place
+        echo "No existing config, will create skeleton"
         java -jar \
             -Dbamboo.home=$BAMBOO_HOME \
             /var/vcap/packages/bamboo-agent/atlassian-bamboo-agent-installer-5.9.7.jar \
             <%= p("server.protocol") %>://<%= p("server.ip") %>:<%= p("server.port") %><%= p("server.context") %>agentServer/ \
-            install
+            install >&3 2>&4
     fi
     # set name to something useful
     python /var/vcap/jobs/bamboo-agent/bin/modifyAgentConfig.py
-
+    echo "starting agent in JVM wrapper"
     java -jar \
         -Dbamboo.home=$BAMBOO_HOME \
         /var/vcap/packages/bamboo-agent/atlassian-bamboo-agent-installer-5.9.7.jar \
-        <%= p("server.protocol") %>://<%= p("server.ip") %>:<%= p("server.port") %><%= p("server.context") %>agentServer/
+        <%= p("server.protocol") %>://<%= p("server.ip") %>:<%= p("server.port") %><%= p("server.context") %>agentServer/ \
+         >&3 2>&4
+    echo "done"
     ;;
 
   stop)
@@ -72,11 +85,12 @@ case $1 in
     java -jar \
         /var/vcap/packages/bamboo-agent/atlassian-bamboo-agent-installer-5.9.7.jar \
          <%= p("server.protocol") %>://<%= p("server.ip") %>:<%= p("server.port") %><%= p("server.context") %>agentServer/ \
-        stop
-    sleep 5
-    kill -9 `cat ${PIDFILE}`
+        stop >&3 2>&4
+    echo "Asked wrapper to stop, will sleep 10 seconds before hard kill"
+    sleep 10
+    echo "killing any remaining java processes"
     pkill -9 java
-
+    echo "done"
     ;;
 
   *)

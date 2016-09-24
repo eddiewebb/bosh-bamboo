@@ -16,8 +16,8 @@ if not os.path.isfile('/var/vcap/data/bamboo-agent/bamboo-agent.cfg.xml'):
 	configTree = xml.etree.ElementTree.ElementTree(root)
 else:
 	configTree = xml.etree.ElementTree.parse('/var/vcap/data/bamboo-agent/bamboo-agent.cfg.xml')
-	name = definition.find("agentDefinition/name")
-	description = definition.find("agentDefinition/description")
+	name = configTree.find("agentDefinition/name")
+	description = configTree.find("agentDefinition/description")
 
 name.text = "BOSH: " + spec['id']
 description.text = "BOSH Agent running on " + spec['id']

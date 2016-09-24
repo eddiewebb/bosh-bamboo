@@ -44,4 +44,10 @@ builds:
     version: 0+dev.21
   4c6bbf38-420f-4765-9bb0-7df204f310ea:
     version: 0+dev.22
+  81472391-a5bc-456b-a246-ef26f654de47:
+    version: 0+dev.23
+  133b4444-b06d-474b-bfaf-39760a840f64:
+    version: 0+dev.24
+  35f7c818-325e-4ba7-9a40-ac5d1773e163:
+    version: 0+dev.25
 format-version: '2'
