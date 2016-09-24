@@ -3,7 +3,7 @@ name: bamboo-agent
 templates:
   bin/bamboo-agent: bin/bamboo-agent
   bin/drain: bin/drain
-  bin/modifyAgentConfig.py: bin/modifyAgentConfig
+  bin/modifyAgentConfig.py: bin/modifyAgentConfig.py
   bin/agent-api-tasks.sh: bin/agent-api-tasks.sh
   config/bamboo-capabilities.properties: config/bamboo-capabilities.properties
 
