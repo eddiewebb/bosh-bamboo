@@ -1,12 +1,16 @@
 # bosh deployment with Bambo Agent APIs 
 THis project uses bosh as well as (agent apis for bamboo)[https://bitbucket.org/eddiewebb/bamboo-agent-apis] to add some logic around lifecycle.
 
+![Adds workload and capacity intelligence to pool of bamboo agents](/material/images/aafb-agent-marked-disabled.png)
+
+
+
 ## Features
 - Uses persitent store for consistent agent IDs
-- bosh job stops marks agent disabled in bamboo, and will wait for any running bamboo jobs to complete (up to `update_watch_time`)![jobs will wait for running work on stop](/materials/images/aafb-stop-log.png)
+- bosh job stops marks agent disabled in bamboo, and will wait for any running bamboo jobs to complete (up to `update_watch_time`)![jobs will wait for running work on stop](/material/images/aafb-stop-log.png)
 - bost start will mark agent enabled check for any open tasks to complete (see api docs)
-- When scaling down, agents wait for running jobs before halting/deleting![deletes and halts wait for running bamboo jobs](/materials/images/aafb-delete-wait.png)
-- Sets agent name in Bamboo to the job instance container id. ![AGent names in bamboo match bosh container id](/materials/images/aafb-ids-match-bamboo.png)
+- When scaling down, agents wait for running jobs before halting/deleting![deletes and halts wait for running bamboo jobs](/material/images/aafb-delete-wait.png)
+- Sets agent name in Bamboo to the job instance container id. ![AGent names in bamboo match bosh container id](/material/images/aafb-ids-match-bamboo.png)
 
 ## Setup the Release
 ### Blobs
