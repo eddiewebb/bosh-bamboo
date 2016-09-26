@@ -9,8 +9,46 @@ THis project uses bosh as well as (agent apis for bamboo)[https://bitbucket.org/
 - Uses persitent store for consistent agent IDs
 - bosh job stops marks agent disabled in bamboo, and will wait for any running bamboo jobs to complete (up to `update_watch_time`)![jobs will wait for running work on stop](/material/images/aafb-stop-log.png)
 - bost start will mark agent enabled check for any open tasks to complete (see api docs)
+```
+root@d62ed5e7-6b2e-492a-b4e6-42a3a13e5763:/var/vcap/bosh_ssh/bosh_x1exbggvs# 
+Sat Sep 24 23:37:15 UTC 2016 
+Sat Sep 24 23:37:15 UTC 2016 Agent CTL Script
+Sat Sep 24 23:37:15 UTC 2016 starting...
+Sat Sep 24 23:37:15 UTC 2016 restoring agent config from persistent disk
+Sat Sep 24 23:37:15 UTC 2016 api enabled, closing open tasks and enabling agent
+Sat Sep 24 23:37:15 UTC 2016 No open tasks, normal startup
+Sat Sep 24 23:37:15 UTC 2016 Enable API returned:
+Sat Sep 24 23:37:15 UTC 2016 {"id":4161548,"name":"BOSH: d88f8e67-bcf0-456b-9e46-ab3e720ba6b4 (2)","enabled":true,"busy":true,"online":true}
+Sat Sep 24 23:37:15 UTC 2016 starting agent in JVM wrapper
+#
+# workloads runs, life goes one for a while until...
+#
+Sat Sep 24 23:40:36 UTC 2016 Agent CTL Script
+Sat Sep 24 23:40:36 UTC 2016 stopping...
+Sat Sep 24 23:40:36 UTC 2016 Disable API returned:
+Sat Sep 24 23:40:36 UTC 2016 {"id":4161548,"name":"BOSH: d88f8e67-bcf0-456b-9e46-ab3e720ba6b4 (2)","enabled":false,"busy":true,"online":true}
+Sat Sep 24 23:40:36 UTC 2016 Capabilties Purged  # optional
+Sat Sep 24 23:40:36 UTC 2016
+Sat Sep 24 23:40:36 UTC 2016 Status API returned:
+Sat Sep 24 23:40:36 UTC 2016 ENABLED=false
+Sat Sep 24 23:40:36 UTC 2016 BUSY=true  ## the agent has an active job !!
+Sat Sep 24 23:40:36 UTC 2016 ONLINE=true
+Sat Sep 24 23:40:36 UTC 2016 Agent is still performing  a build. Blocking 60 seconds to check back
+#
+# Current job on bamboo runs for a while before it completes
+#
+Sat Sep 24 23:44:36 UTC 2016 
+Sat Sep 24 23:44:36 UTC 2016 Status API returned:
+Sat Sep 24 23:44:36 UTC 2016 ENABLED=false
+Sat Sep 24 23:44:36 UTC 2016 BUSY=false   ## the agent is no longer building!
+Sat Sep 24 23:44:36 UTC 2016 ONLINE=true
+Sat Sep 24 23:44:36 UTC 2016 Agent is idle, allowing next steps to proceed. 
+Sat Sep 24 23:44:36 UTC 2016 Asked wrapper to stop, will sleep 10 seconds before hard kill
+Sat Sep 24 23:44:41 UTC 2016 killing any remaining java processes
+Sat Sep 24 23:44:41 UTC 2016 done
+```
 - When scaling down, agents wait for running jobs before halting/deleting![deletes and halts wait for running bamboo jobs](/material/images/aafb-delete-wait.png)
-- Sets agent name in Bamboo to the job instance container id. ![AGent names in bamboo match bosh container id](/material/images/aafb-ids-match-bamboo.png)
+- Sets agent name in Bamboo to the job instance container id. ![AGent names in bamboo match bosh container id](/material/images/aafb-agent-ids-match-bamboo.png)
 
 ## Setup the Release
 ### Blobs
