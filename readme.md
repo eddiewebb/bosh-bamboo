@@ -41,12 +41,13 @@ See bosh-lite docks for quick setup, or target your existing director
 See `buildAndDeployRelease.sh` for individual steps, or run it to deploy the current config.
 
 ## Manifest Values
-- Add valid agent-api token  (api.token.uuid)
+- `api.enabled` - make use of Agent APIs? (otherwise shutdowns will just be a hard kill, interupting any running jobs. And capabilities in config may not match the current agent, risking build failures)
+- `api.token.uuid` - Valid token from (agent apis for bamboo)[https://bitbucket.org/eddiewebb/bamboo-agent-apis] created in admin UI with 'change' permission
 - Specify gateway IP (see network config below for virtualbox example, or adjust for your cpi)
-- bosh process bock (just tips, defaults work)
- - watch_time defines how long we let jobs run before forcing an agent or giving up (depening on cli command)
- - max_in_flight - this si critical to make sure all your agents don't go offline at once! Set to 1 for small farms or a small percentage of large farms
- - canaries - 1 is fine, bosh release should include all smoke tests ot use on start
+- bosh `process` block (just tips, defaults work)
+ - `watch_time` defines how long we let jobs run before forcing an agent or giving up (depening on cli command)
+ - `max_in_flight` - this si critical to make sure all your agents don't go offline at once! Set to 1 for small farms or a small percentage of large farms
+ - `canaries` - 1 is fine, bosh release should include all smoke tests ot use on start
 
 
 ## bosh-lite / local.0/24 192.168.50.4`
