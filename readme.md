@@ -1,5 +1,5 @@
 # bosh deployment with Bambo Agent APIs 
-THis project uses bosh as well as (agent apis for bamboo)[https://bitbucket.org/eddiewebb/bamboo-agent-apis] to add some logic around lifecycle.
+THis project uses bosh as well as [agent apis for bamboo](https://bitbucket.org/eddiewebb/bamboo-agent-apis) to add some logic around lifecycle.
 
 ![Adds workload and capacity intelligence to pool of bamboo agents](/material/images/aafb-agent-marked-disabled.png)
 
@@ -42,7 +42,7 @@ See `buildAndDeployRelease.sh` for individual steps, or run it to deploy the cur
 
 ## Manifest Values
 - `api.enabled` - make use of Agent APIs? (otherwise shutdowns will just be a hard kill, interupting any running jobs. And capabilities in config may not match the current agent, risking build failures)
-- `api.token.uuid` - Valid token from (agent apis for bamboo)[https://bitbucket.org/eddiewebb/bamboo-agent-apis] created in admin UI with 'change' permission
+- `api.token.uuid` - Valid token from [agent apis for bamboo](https://bitbucket.org/eddiewebb/bamboo-agent-apis) created in admin UI with 'change' permission
 - Specify gateway IP (see network config below for virtualbox example, or adjust for your cpi)
 - bosh `process` block (just tips, defaults work)
  - `watch_time` defines how long we let jobs run before forcing an agent or giving up (depening on cli command)
