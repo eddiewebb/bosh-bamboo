@@ -50,4 +50,8 @@ builds:
     version: 0+dev.24
   35f7c818-325e-4ba7-9a40-ac5d1773e163:
     version: 0+dev.25
+  35ad7dd1-84ef-404d-be28-f591fdbe3916:
+    version: 0+dev.26
+  f1a99452-901e-4c28-adaf-2cd50de76802:
+    version: 0+dev.27
 format-version: '2'

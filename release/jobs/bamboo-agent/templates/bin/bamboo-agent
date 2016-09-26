@@ -18,7 +18,7 @@ export JAVA_HOME=/var/vcap/packages/jdk8/jre
 
 
 #send all output from this file to one log.
-logit() { while IFS='' read -r line; do echo "$(date) $line" >> ${LOG_DIR}/bamboo-ctl.log; done; };
+logit() { while IFS='' read -r line; do echo "$(date +'%Y-%m-%d %T') $line" >> ${LOG_DIR}/bamboo-ctl.log; done; };
 exec > >(logit)
 exec 2>&1
 

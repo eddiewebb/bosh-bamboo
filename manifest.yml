@@ -13,8 +13,8 @@ stemcells:
 update:
   canaries: 1
   max_in_flight: 1 #Should be a small portion of overall capacity to minmize disruption
-  canary_watch_time: 1000-100000
-  update_watch_time: 1000-100000
+  canary_watch_time: 1000-600000 # give up to 10 minutes for any running jobs
+  update_watch_time: 1000-600000 # give up to 10 minutes for any running jobs
   serial: false
 
 
