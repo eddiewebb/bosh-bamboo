@@ -4,4 +4,4 @@ name: bamboo
 dependencies:
 
 files:
-- bamboo/atlassian-bamboo-5.9.7.tar.gz 
+- bamboo/atlassian-bamboo-6.2.9.tar.gz

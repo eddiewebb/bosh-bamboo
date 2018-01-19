@@ -1,14 +1,14 @@
 name: bamboo
-director_uuid: 93c01d2d-a2a5-49d8-8d02-389fd223a9cf
-
-releases:
-  - name: bamboo
-    version: latest
+director_uuid: e52c94f2-ec50-487b-b97c-0ae55fee1efc
 
 stemcells:
 - alias: trusty
   os: ubuntu-trusty
   version: latest
+
+releases:
+  - name: bamboo
+    version: latest
 
 update:
   canaries: 1
@@ -26,7 +26,7 @@ instance_groups:
   persistent_disk_type: default
   stemcell: trusty
   azs: [z1]
-  networks: 
+  networks:
   - name: private
   jobs:
   - name: bamboo-agent

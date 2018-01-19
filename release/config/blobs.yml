@@ -1,1 +1,6 @@
---- {}
+bamboo/atlassian-bamboo-6.2.9.tar.gz:
+  size: 242684582
+  sha: 76bbbd6fff63ad0299402fd95091d6143af78862
+jdk8/jdk-8u162-linux-x64.tar.gz:
+  size: 189815615
+  sha: fdc69519cdccd73f9240a68e89fcc3d2d07141d1

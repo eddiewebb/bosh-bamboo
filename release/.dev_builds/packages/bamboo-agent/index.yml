@@ -1,6 +1,8 @@
----
 builds:
+  493c591b3b96cc814b24dbf1c0fdcfdb799668b6:
+    version: 493c591b3b96cc814b24dbf1c0fdcfdb799668b6
+    sha1: 558621dd94d91ebdf92ffebb9d36a0b4b34bd5f9
   54b119f286d4800888c1e8e942872aaba966ffa6:
     version: 54b119f286d4800888c1e8e942872aaba966ffa6
     sha1: 96bbeee809b2224da5a57dd0f0f8ec3f02261011
-format-version: '2'
+format-version: "2"

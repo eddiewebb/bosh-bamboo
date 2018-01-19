@@ -1,6 +1,9 @@
 azs:
 - name: z1
 
+
+
+
 vm_types:
 - name: default
   cloud_properties:

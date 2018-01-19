@@ -1,3 +1,4 @@
-blobs
+release/blobs
 bosh-lite
 packages
+release/.dev_builds

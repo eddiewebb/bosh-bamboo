@@ -4,10 +4,9 @@ templates:
   bamboo: bin/bamboo
   bamboo_home/bamboo.cfg.xml: bamboo_home/bamboo.cfg.xml
   bamboo_home/xml-data/configuration/administration.xml: bamboo_home/xml-data/configuration/administration.xml
-  bamboo_home/xml-data/configuration/crowd.properties: bamboo_home/xml-data/configuration/crowd.properties
   bamboo_install/bin/setenv.sh: bamboo_install/bin/setenv.sh
   bamboo_install/conf/server.xml: bamboo_install/conf/server.xml
-  
+
 packages:
 - jdk8
 - bamboo
