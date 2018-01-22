@@ -1,8 +1,6 @@
 #!/bin/sh
 #
-# One way to set the Bamboo HOME path is here via this variable.  Simply uncomment it and set a valid path like /bamboo/home.  You can of course set it outside in the command terminal.  That will also work.
-#
-#BAMBOO_HOME=""
+
 
 #
 #  Occasionally Atlassian Support may recommend that you set some specific JVM arguments.  You can use this variable below to do that.
@@ -29,20 +27,10 @@ JVM_REQUIRED_ARGS=""
 PRGDIR=`dirname "$0"`
 cat "${PRGDIR}"/bamboobanner.txt
 
-#BAMBOO_HOME_MINUSD=""
-#if [ "$BAMBOO_HOME" != "" ]; then
-#    echo $BAMBOO_HOME | grep -q " "
-#    if [ $? -eq 0 ]; then
-#       echo ""
-#       echo "----------------------------------------------------------------------------------------------------------------------"
-#       echo "   WARNING : You cannot have a BAMBOO_HOME environment variable set with spaces in it.  This variable is being ignored"
-#       echo "----------------------------------------------------------------------------------------------------------------------"
-#   else
-#       BAMBOO_HOME_MINUSD=-Dbamboo.home=$BAMBOO_HOME
-#   fi
-#i
+# provided by bin/bamboo which calls startup.sh
+BAMBOO_HOME_MINUSD=-Dbamboo.home=$BAMBOO_HOME
 
-JAVA_OPTS="-Xms${JVM_MINIMUM_MEMORY} -Xmx${JVM_MAXIMUM_MEMORY} ${JAVA_OPTS} ${JVM_REQUIRED_ARGS} ${JVM_SUPPORT_RECOMMENDED_ARGS} " #${BAMBOO_HOME_MINUSD}"
+JAVA_OPTS="-Xms${JVM_MINIMUM_MEMORY} -Xmx${JVM_MAXIMUM_MEMORY} ${JAVA_OPTS} ${JVM_REQUIRED_ARGS} ${JVM_SUPPORT_RECOMMENDED_ARGS} ${BAMBOO_HOME_MINUSD}"
 
 
 # Perm Gen size needs to be increased if encountering OutOfMemoryError: PermGen problems. Specifying PermGen size is not valid on IBM JDKs

@@ -1,11 +1,15 @@
 ---
 name: bamboo
+
+# these files will be copied to /var/cap/jobs/bamboo/ on the VM after evaluating for expressions
 templates:
-  bamboo: bin/bamboo
-  bamboo_home/bamboo.cfg.xml: bamboo_home/bamboo.cfg.xml
   bamboo_home/xml-data/configuration/administration.xml: bamboo_home/xml-data/configuration/administration.xml
   bamboo_install/bin/setenv.sh: bamboo_install/bin/setenv.sh
-  bamboo_install/conf/server.xml: bamboo_install/conf/server.xml
+  bamboo_home/bamboo.cfg.xml.xslt: bamboo_home/bamboo.cfg.xml.xslt
+  # use bosh managed Lifecycle https://bosh.io/docs/job-lifecycle.html
+  job-lifecycle/pre-start.sh: bin/pre-start
+  job-lifecycle/bamboo: bin/bamboo # monit start is called, which ivokes `bamboo start` provided by this file.
+  #job-lifecycle/post-start.sh: bin/post-start
 
 packages:
 - jdk8

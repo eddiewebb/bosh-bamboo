@@ -75,6 +75,11 @@ instance_groups:
     properties:
       databases:
         port: 5524
+        databases:
+          - name: bamboo
+      roles:
+        - name: bamboo
+          password: password  # for postgres suggested deploy is using certs https://github.com/cloudfoundry/postgres-release#enabling-ssl-on-the-postgresql-server
     provides:
       postgres:
         as: postgres-database

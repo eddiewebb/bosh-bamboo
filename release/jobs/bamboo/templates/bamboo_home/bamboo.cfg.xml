@@ -5,9 +5,9 @@
   <setupType>custom</setupType>
   <buildNumber>5920</buildNumber>
   <properties>
+      <!-- missing properties proivided by xslt, this file shouyld onluy be used on very first start -->
     <property name="bamboo.artifacts.directory">${bambooHome}/artifacts</property>
     <property name="bamboo.config.directory">${bambooHome}/xml-data/configuration</property>
-    <property name="bamboo.jms.broker.client.uri">failover:(tcp://<%= p("server.ip") %>:54663?wireFormat.maxInactivityDuration=300000)?initialReconnectDelay=15000&amp;maxReconnectAttempts=10</property>
     <property name="bamboo.jms.broker.uri">tcp://0.0.0.0:54663?wireFormat.maxInactivityDuration=300000</property>
     <property name="bamboo.project.directory">${bambooHome}/xml-data/builds</property>
     <property name="buildWorkingDir">${bambooHome}/xml-data/build-dir</property>
@@ -18,13 +18,7 @@
     <property name="hibernate.c3p0.max_statements">0</property>
     <property name="hibernate.c3p0.min_size">0</property>
     <property name="hibernate.c3p0.timeout">30</property>
-    <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-    <property name="hibernate.connection.password">password</property>
-    <property name="hibernate.connection.url">jdbc:postgresql://lf-bamboo-boshlite.ctswkbwuqnqv.us-east-1.rds.amazonaws.com:5432/bamboo</property>
-    <property name="hibernate.connection.username">bamboo</property>
-    <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
     <property name="hibernate.setup">true</property>
-    <property name="license.string"><%= p("bamboo.license") %></property>
     <property name="lucene.index.dir">${bambooHome}/index</property>
     <property name="serverId">B8L7-9SHK-RR34-XQDU</property>
     <property name="webwork.multipart.saveDir">${bambooHome}/temp</property>

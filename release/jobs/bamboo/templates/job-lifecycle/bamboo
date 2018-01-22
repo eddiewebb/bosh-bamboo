@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#
+# This file will be saved as /var/vcap/jobs/bamboo/bin/bamboo, invoked by monit
+# SEE https://bosh.io/docs/job-lifecycle.html
+#
+
+
+RUN_DIR=/var/vcap/sys/run/bamboo
+LOG_DIR=/var/vcap/sys/log/bamboo
+PIDFILE=${RUN_DIR}/bamboo.pid # this should match monit expectations
+
+
+export JAVA_HOME=/var/vcap/packages/jdk8
+export PATH=$JAVA_HOME/bin:$PATH
+
+
+case $1 in
+
+  start)
+    exec > $LOG_DIR/bamboo.stdout.log
+    exec 2> $LOG_DIR/bamboo.stderr.log
+
+    export CATALINA_PID=$PIDFILE
+    export BAMBOO_HOME=/var/vcap/store/bamboo
+
+    #start bamboo
+    /var/vcap/packages/bamboo/bin/startup.sh
+
+    ;;
+
+  stop)
+    exec > $LOG_DIR/bamboo.stdout.log
+    exec 2> $LOG_DIR/bamboo.stderr.log
+    #nice stop request for bamboo
+    /var/vcap/packages/bamboo/bin/stop-bamboo.sh
+    sleep 10
+    #esnure java is dead
+    kill -9 `cat $PIDFILE`
+    rm -f $PIDFILE
+
+    ;;
+
+  *)
+    echo "Usage: ctl {start|stop}" ;;
+
+esac
