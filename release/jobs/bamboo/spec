@@ -11,6 +11,9 @@ packages:
 - jdk8
 - bamboo
 
+consumes:
+- name: data-db
+  type: database
 
 properties:
   server.ip:

@@ -9,6 +9,8 @@ stemcells:
 releases:
   - name: bamboo
     version: latest
+  - name: postgres
+    version: latest
 
 update:
   canaries: 1
@@ -19,6 +21,24 @@ update:
 
 
 instance_groups:
+- name: bamboo-server
+  instances: 1
+  vm_type: default
+  persistent_disk_type: default
+  stemcell: trusty
+  azs: [z1]
+  networks:
+  - name: private
+  jobs:
+  - name: bamboo
+    release: bamboo
+    consumes:
+      data-db: {from: postgres-database}
+    properties:
+      server:
+        ip: 192.168.100.11 #from cloud config reserved IP
+      # 3 hour tiembomb license from atlassian.
+      license: AAABCA0ODAoPeNpdj01PwkAURffzKyZxZ1IyUzARkllQ24gRaQMtGnaP8VEmtjPNfFT59yJVFyzfubkn796Ux0Bz6SmbUM5nbDzj97RISxozHpMUnbSq88poUaLztFEStUN6MJZ2TaiVpu/YY2M6tI6sQrtHmx8qd74EZ+TBIvyUU/AoYs7jiE0jzknWQxMuifA2IBlUbnQ7AulVjwN9AaU9atASs69O2dNFU4wXJLc1aOUGw9w34JwCTTZoe7RPqUgep2X0Vm0n0fNut4gSxl/Jcnj9nFb6Q5tP/Ueu3L+0PHW4ghZFmm2zZV5k6/95CbR7Y9bYGo/zGrV3Ir4jRbDyCA6vt34DO8p3SDAsAhQnJjLD5k9Fr3uaIzkXKf83o5vDdQIUe4XequNCC3D+9ht9ZYhNZFKmnhc=X02dh
 - name: agents
   instances: 2
   # replace with a VM type from your BOSH Director's cloud config
@@ -41,3 +61,20 @@ instance_groups:
         enabled: true #only enable APIs if using persistent disk
         token:
           uuid: cd94f47f-7659-416c-ac35-c552f4e66f7f  #replaced with an read/write API token for Bamboo-Agent-APIs
+- name: postgres
+  instances: 1
+  stemcell: trusty
+  persistent_disk_type: default
+  vm_type: default
+  azs: [z1]
+  networks:
+  - name: private
+  jobs:
+  - name: postgres
+    release: postgres
+    properties:
+      databases:
+        port: 5524
+    provides:
+      postgres:
+        as: postgres-database

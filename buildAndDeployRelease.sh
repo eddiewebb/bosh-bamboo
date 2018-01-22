@@ -6,7 +6,11 @@
 # Cloud config specifies network, vm sizes, etc.
 bosh -e vbox update-cloud-config cloud-config-vbox.yml
 #provide stemcell,get latest URL for "warden bosh-lite" from bosh.io
-#bosh -e vbox us https://s3.amazonaws.com/bosh-core-stemcells/warden/bosh-stemcell-3468.19-warden-boshlite-ubuntu-trusty-go_agent.tgz
+# bosh -e vbox us https://s3.amazonaws.com/bosh-core-stemcells/warden/bosh-stemcell-3468.19-warden-boshlite-ubuntu-trusty-go_agent.tgz
+
+
+## use community postgres - https://github.com/cloudfoundry/postgres-release
+# bosh -e vbox upload-release https://bosh.io/d/github.com/cloudfoundry/postgres-release
 
 
 
