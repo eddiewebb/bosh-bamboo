@@ -5,6 +5,7 @@ name: bamboo
 templates:
   bamboo_home/xml-data/configuration/administration.xml: bamboo_home/xml-data/configuration/administration.xml
   bamboo_install/bin/setenv.sh: bamboo_install/bin/setenv.sh
+  bamboo_home/bamboo.cfg.xml: bamboo_home/bamboo.cfg.xml
   bamboo_home/bamboo.cfg.xml.xslt: bamboo_home/bamboo.cfg.xml.xslt
   # use bosh managed Lifecycle https://bosh.io/docs/job-lifecycle.html
   job-lifecycle/pre-start.sh: bin/pre-start
@@ -18,6 +19,12 @@ packages:
 consumes:
 - name: data-db
   type: database
+
+provides:
+- name: bamboo-server
+  type: conn
+  properties:
+  - server.port
 
 properties:
   server.ip:

@@ -22,8 +22,6 @@ apt-get --yes --force-yes install xsltproc
 # Bosh places our template files in /var/vcap/jobs/bamboo.
 # Anything we need elsewhere (i.e. permanemt storage /var/vcap/store) must be moved.
 
-cp -r /var/vcap/jobs/bamboo/bamboo_home/* /var/vcap/store/bamboo/
-
 
 #replace current or default bamboo.cfg injecting properties with xslt
 if [ -f $STORE_DIR/bamboo.cfg.xml ];then
@@ -33,5 +31,5 @@ else
 fi
 xsltproc -o $STORE_DIR/bamboo.cfg.xml $STORE_DIR/bamboo.cfg.xml.xslt ${BAM_XML}
 
-# overlay any customized property files in the install directory
+# overlay any customized property files into the install directory (overide vendor install files)
 cp -r /var/vcap/jobs/bamboo/bamboo_install/* /var/vcap/packages/bamboo/

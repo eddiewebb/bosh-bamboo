@@ -11,6 +11,11 @@ packages:
 - jdk8
 - bamboo-agent
 
+consumes:
+- name: bamboo-server
+  type: conn
+
+
 properties:
   server.ip:
     description: The IP address of the Bamboo server

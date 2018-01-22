@@ -31,3 +31,6 @@ popd
 
 #deploy!
 bosh -e vbox -d bamboo deploy manifest.yml
+
+
+#alias bosh='bosh -e vbox -d bamboo'
