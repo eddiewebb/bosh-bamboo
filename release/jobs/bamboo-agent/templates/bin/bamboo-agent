@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #    This is the lifecycle script (ctl) called by monit.
-#     
+#
 #
 
 RUN_DIR=/var/vcap/sys/run/bamboo-agent
@@ -38,13 +38,13 @@ case $1 in
     ## copy confiug files in temapltes
     mkdir $BAMBOO_HOME/bin
     cp  /var/vcap/jobs/bamboo-agent/config/bamboo-capabilities.properties /var/vcap/data/bamboo-agent/bin/
-    
+
     # if persistent disk has agent config, use it
     if [ -f /var/vcap/store/bamboo-agent/bamboo-agent.cfg.xml ]; then
         echo "restoring agent config from persistent disk"
         # existing agent, copy ID & name to emphemeral path
         cp /var/vcap/store/bamboo-agent/bamboo-agent.cfg.xml /var/vcap/data/bamboo-agent/bamboo-agent.cfg.xml
-    
+
         # if manifest enables API, cleanup any previoud tasks/reenable specific agent
         if [ "<%= p("api.enabled") %>" == "true" ];then
             echo "api enabled, closing open tasks and enabling agent"
@@ -58,7 +58,7 @@ case $1 in
         java -jar \
             -Dbamboo.home=$BAMBOO_HOME \
             /var/vcap/packages/bamboo-agent/atlassian-bamboo-agent-installer-5.9.7.jar \
-            <%= p("server.protocol") %>://<%= p("server.ip") %>:<%= p("server.port") %><%= p("server.context") %>agentServer/ \
+            <%= link('bamboo-server').p("server.protocol") %>://<%= link('bamboo-server').instances[0].address %>:<%= link('bamboo-server').p("server.port") %><%= link('bamboo-server').if_p("server.context") %>/agentServer/ \
             install >&3 2>&4
     fi
     # set name to something useful
@@ -67,7 +67,7 @@ case $1 in
     java -jar \
         -Dbamboo.home=$BAMBOO_HOME \
         /var/vcap/packages/bamboo-agent/atlassian-bamboo-agent-installer-5.9.7.jar \
-        <%= p("server.protocol") %>://<%= p("server.ip") %>:<%= p("server.port") %><%= p("server.context") %>agentServer/ \
+        <%= link('bamboo-server').p("server.protocol") %>://<%= link('bamboo-server').instances[0].address %>:<%= link('bamboo-server').p("server.port") %><%= link('bamboo-server').if_p("server.context") %>/agentServer/ \
          >&3 2>&4
     echo "done"
     ;;
@@ -84,7 +84,7 @@ case $1 in
     #ask agent to shutdown nicely
     java -jar \
         /var/vcap/packages/bamboo-agent/atlassian-bamboo-agent-installer-5.9.7.jar \
-         <%= p("server.protocol") %>://<%= p("server.ip") %>:<%= p("server.port") %><%= p("server.context") %>agentServer/ \
+         <%= link('bamboo-server').p("server.protocol") %>://<%= link('bamboo-server').instances[0].address %>:<%= link('bamboo-server').p("server.port") %><%= link('bamboo-server').if_p("server.context") %>/agentServer/ \
         stop >&3 2>&4
     echo "Asked wrapper to stop, will sleep 10 seconds before hard kill"
     sleep 10

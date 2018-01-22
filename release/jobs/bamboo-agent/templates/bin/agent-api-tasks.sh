@@ -7,7 +7,7 @@
 uuid="<%= p("api.token.uuid") %>"
 
 # URl of master server
-bambooUrl="<%= p("server.protocol") %>://<%= p("server.ip") %>:<%= p("server.port") %><%= p("server.context") %>"
+bambooUrl="<%= link('bamboo-server').p("server.protocol") %>://<%= link('bamboo-server').instances[0].address %>:<%= link('bamboo-server').p("server.port") %><%= link('bamboo-server').if_p("server.context") %>"
 
 # Agent ID can be hard coded, but is easily pulled from the running system
 agentId=`cat /var/vcap/data/bamboo-agent/bamboo-agent.cfg.xml | grep -oPm1 "(?<=<id>)[^<]+"`
@@ -17,7 +17,7 @@ TMPDIRD=`mktemp -d /tmp/agentMaintenance.XXXXXX` || exit 1
 
 
 purgeCapabilities(){
-	curl -H "X-Atlassian-Token:nocheck" -X DELETE -k -b ${TMPDIRD}/cookies "${bambooUrl}rest/api/agents/latest/${agentId}/capabilities?uuid=${uuid}" -o ${TMPDIRD}/capabilities.json 2>/dev/null
+	curl -H "X-Atlassian-Token:nocheck" -X DELETE -k -b ${TMPDIRD}/cookies "${bambooUrl}/rest/api/agents/latest/${agentId}/capabilities?uuid=${uuid}" -o ${TMPDIRD}/capabilities.json 2>/dev/null
 	echo "Capabilties Purged"
 }
 
@@ -38,7 +38,7 @@ blockUntilIdle(){
 
 
 getStatus(){
-	curl -H "X-Atlassian-Token:nocheck" -X GET -k -b ${TMPDIRD}/cookies "${bambooUrl}rest/api/agents/latest/${agentId}/state/text?uuid=${uuid}" -o ${TMPDIRD}/state.text 2>/dev/null	
+	curl -H "X-Atlassian-Token:nocheck" -X GET -k -b ${TMPDIRD}/cookies "${bambooUrl}/rest/api/agents/latest/${agentId}/state/text?uuid=${uuid}" -o ${TMPDIRD}/state.text 2>/dev/null
 	echo "Status API returned:"
 	cat ${TMPDIRD}/state.text
 	echo ""
@@ -47,14 +47,14 @@ getStatus(){
 
 
 disableAgent(){
-	curl -H "X-Atlassian-Token:nocheck" -X POST -k -b ${TMPDIRD}/cookies "${bambooUrl}rest/api/agents/latest/${agentId}/state/disable?uuid=${uuid}" -o ${TMPDIRD}/state.json 2>/dev/null	
+	curl -H "X-Atlassian-Token:nocheck" -X POST -k -b ${TMPDIRD}/cookies "${bambooUrl}/rest/api/agents/latest/${agentId}/state/disable?uuid=${uuid}" -o ${TMPDIRD}/state.json 2>/dev/null
 	echo "Disable API returned:"
 	cat ${TMPDIRD}/state.json
 	echo ""
 }
 
 enableAgent(){
-	curl -H "X-Atlassian-Token:nocheck" -X POST -k -b ${TMPDIRD}/cookies "${bambooUrl}rest/api/agents/latest/${agentId}/state/enable?uuid=${uuid}" -o ${TMPDIRD}/state.json 2>/dev/null	
+	curl -H "X-Atlassian-Token:nocheck" -X POST -k -b ${TMPDIRD}/cookies "${bambooUrl}/rest/api/agents/latest/${agentId}/state/enable?uuid=${uuid}" -o ${TMPDIRD}/state.json 2>/dev/null
 	echo "Enable API returned:"
 	cat ${TMPDIRD}/state.json
 	echo ""
@@ -64,7 +64,7 @@ requestMaintenance(){
 	SIBLING_PATIENCE_TIME=30 # will wait 1 minutes
 	SIBLING_PATIENCE_COUNT=10 # will repeat 15 times.
 
-	curl -H "X-Atlassian-Token:nocheck" -X POST -k -b ${TMPDIRD}/cookies "${bambooUrl}rest/api/agents/latest/${agentId}/maintenance?uuid=${uuid}" -o ${TMPDIRD}/state.text 2>/dev/null	
+	curl -H "X-Atlassian-Token:nocheck" -X POST -k -b ${TMPDIRD}/cookies "${bambooUrl}/rest/api/agents/latest/${agentId}/maintenance?uuid=${uuid}" -o ${TMPDIRD}/state.text 2>/dev/null
 	echo "Chaperone API returned:"
 	cat ${TMPDIRD}/state.text
 	source ${TMPDIRD}/state.text
@@ -104,13 +104,13 @@ requestMaintenance(){
 }
 
 completeAgentTaskIfOpen(){
-	curl -H "X-Atlassian-Token:nocheck" -X GET -k -b ${TMPDIRD}/cookies "${bambooUrl}rest/api/agents/latest/${agentId}/maintenance/text?uuid=${uuid}" -o ${TMPDIRD}/openTask.txt 2>/dev/null	
+	curl -H "X-Atlassian-Token:nocheck" -X GET -k -b ${TMPDIRD}/cookies "${bambooUrl}/rest/api/agents/latest/${agentId}/maintenance/text?uuid=${uuid}" -o ${TMPDIRD}/openTask.txt 2>/dev/null
 	source ${TMPDIRD}/openTask.txt
 	if [ ${TASK} -eq 0 ];then
 		echo "No open tasks, normal startup"
 	else
 		echo "Found open task ${TASK} for this agent, will mark complete."
-		curl -H "X-Atlassian-Token:nocheck" -X PUT -k -b ${TMPDIRD}/cookies "${bambooUrl}rest/api/agents/latest/${agentId}/maintenance/${TASK}/finish?uuid=${uuid}" -o ${TMPDIRD}/state.text 2>/dev/null	
+		curl -H "X-Atlassian-Token:nocheck" -X PUT -k -b ${TMPDIRD}/cookies "${bambooUrl}/rest/api/agents/latest/${agentId}/maintenance/${TASK}/finish?uuid=${uuid}" -o ${TMPDIRD}/state.text 2>/dev/null
 		echo "Complete Task API returned:"
 		cat ${TMPDIRD}/state.text
 		source ${TMPDIRD}/state.text

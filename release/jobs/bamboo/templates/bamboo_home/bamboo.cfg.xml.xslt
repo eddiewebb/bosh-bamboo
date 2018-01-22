@@ -41,7 +41,7 @@ relatively consistent, using all other values as provide by install -->
       <property name="hibernate.connection.password">password</property>
       <property name="hibernate.connection.url">jdbc:postgresql://<%= link('data-db').instances[0].address %>:<%= link('data-db').p('databases.port') %>"/bamboo</property>
       <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-      <property name="bamboo.jms.broker.client.uri">failover:(tcp://<%= p("server.ip") %>:54663?wireFormat.maxInactivityDuration=300000)?initialReconnectDelay=15000&amp;maxReconnectAttempts=10</property>
+      <property name="bamboo.jms.broker.client.uri">failover:(tcp://<%= spec.ip %>:54663?wireFormat.maxInactivityDuration=300000)?initialReconnectDelay=15000&amp;maxReconnectAttempts=10</property>
       <property name="license.string"><%= p("bamboo.license") %></property>
     </properties>
   </xsl:template>

@@ -83,7 +83,9 @@ https://bosh.io/docs/job-lifecycle.html
 
 
 
-### Bosh VM Directorys
+### Bosh VM Directories
+Useful info for troubleshooting.
+ i.e. `bosh -e vbox -d bamboo ssh bamboo-server`
 https://bosh.io/docs/vm-config.html
 
 /var/vcap/data/: Directory that is used by the release jobs to keep ephemeral data. Each release job usually creates a sub-folder with its name for namespacing (e.g. redis-server will place data into /var/vcap/data/redis-server).

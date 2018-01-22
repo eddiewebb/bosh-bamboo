@@ -1,5 +1,5 @@
 <AdministrationConfiguration>
-  <myBaseUrl><%= p("server.ip") %>:8086</myBaseUrl>
+  <myBaseUrl><%= spec.ip %>:<%= p("server.port") %></myBaseUrl>
   <myUseGzipCompression>true</myUseGzipCompression>
   <myInstanceName>Atlassian Bamboo</myInstanceName>
   <deploymentExpiryEnabled>true</deploymentExpiryEnabled>

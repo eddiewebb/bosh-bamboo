@@ -5,8 +5,9 @@ name: bamboo
 templates:
   bamboo_home/xml-data/configuration/administration.xml: bamboo_home/xml-data/configuration/administration.xml
   bamboo_install/bin/setenv.sh: bamboo_install/bin/setenv.sh
-  bamboo_home/bamboo.cfg.xml: bamboo_home/bamboo.cfg.xml
+  # XSLT used in pre-start to replace sub-sections that change based on properties
   bamboo_home/bamboo.cfg.xml.xslt: bamboo_home/bamboo.cfg.xml.xslt
+  bamboo_install/conf/server.xml.xslt: bamboo_install/conf/server.xml.xslt
   # use bosh managed Lifecycle https://bosh.io/docs/job-lifecycle.html
   job-lifecycle/pre-start.sh: bin/pre-start
   job-lifecycle/bamboo: bin/bamboo # monit start is called, which ivokes `bamboo start` provided by this file.
@@ -25,10 +26,10 @@ provides:
   type: conn
   properties:
   - server.port
+  - server.context
+  - server.protocol
 
 properties:
-  server.ip:
-    description: The IP address of the Bamboo server
   server.port:
     description: The port the Bamboo server is running on
     default: 8085
@@ -36,8 +37,8 @@ properties:
     description: Use http or https on master
     default: http
   server.context:
-    description: The server context of bamboo (i.e. /builds). It is important to include both  the leading and trailing slash.
-    default: /
+    description: The server context of bamboo. It is important to only include the leading slash (i.e. /builds). Empty/non-existent implies root (domain.com/)
+    default:
   bamboo.license:
     description: The License String for this Bamboo Instance
     default: AAAA-notlicensed-ZZZ
