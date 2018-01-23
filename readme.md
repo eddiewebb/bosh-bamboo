@@ -5,25 +5,28 @@ This project is mostly a proof of concepts that uses bosh as well as [agent apis
 
 ## Features
 - Allows fully automated upgrades to all remote agents with a single command `bosh deploy`
-- Intelligently manages lifecycle of build agents
- - will wait for existing builds to complete
- - mark agent disabled
-   ![Agents are marked disabled while current workload completes before being destroyed/updated](/material/images/aafb-agent-marked-disabled.png)
- - take agent offline, upgrade/replace
- - bring agent online
- - `bosh start` will mark agent enabled check for any open tasks to complete (see api docs)
+- Intelligently manages lifecycle of build agents (using pre-start, start, and drain)
+    - will wait for existing builds to complete
+    - mark agent disabled
+    - take agent offline, upgrade/replace
+    - bring agent online
+    - `bosh start` will mark agent enabled check for any open tasks to complete (see api docs)
 - Uses persistent store for consistent agent IDs as they update over time
-- Same feature when scaling down! agents wait for running jobs before halting/deleting
-![deletes and halts wait for running bamboo jobs](/material/images/aafb-delete-wait.png)
-
-
-- Sets agent name in Bamboo to the job instance container id. ![Agent names in bamboo match bosh container id](/material/images/aafb-agent-ids-match-bamboo.png)
+- Sets agent name in Bamboo to the job instance container id.
 
 ## Tech used
 - BOSH provides main orchestration of services
 - monit provides service monitoring and automated restarts
 - Java used in [related Bamboo plugin](https://bitbucket.org/eddiewebb/bamboo-agent-apis)
 - Python, Bash/Shell and various linux tools support scripts
+
+## Action Shots
+Agent names in Bamboo will use bosh container IDs.
+![Agent names in bamboo match bosh container id](/material/images/aafb-agent-ids-match-bamboo.png)
+BOSH drain script marks agents disabled to prevent new work from being assigned to them
+![Agents are marked disabled while current workload completes before being destroyed/updated](/material/images/aafb-agent-marked-disabled.png)
+BOSH drain scripts for agents block for any running workloads to complete
+![deletes and halts wait for running bamboo jobs](/material/images/aafb-delete-wait.png)
 
 
 # Building & Deploying the Release
