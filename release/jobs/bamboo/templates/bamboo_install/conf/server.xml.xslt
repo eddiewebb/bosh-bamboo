@@ -35,7 +35,7 @@ relatively consistent, using all other values as provide by install -->
 
   <xsl:template match="Context">
 
-    <Context path="<% if_p('server.context') do |value| %><%= value %><% end %>" docBase="\${{catalina.home}}/atlassian-bamboo" reloadable="false" useHttpOnly="true">
+    <Context path="<% if_p('server.context') do |value| %><%= value %><% end %>" docBase="${{catalina.home}}/atlassian-bamboo" reloadable="false" useHttpOnly="true">
       <Manager pathname=""/>
     </Context>
   </xsl:template>

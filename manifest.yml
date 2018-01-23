@@ -75,14 +75,12 @@ instance_groups:
     release: postgres
     properties:
       databases:
-        port: 5524
+        port: 5432
         databases:
           - name: bamboo
-      roles:
-        - name: bamboo
-          password: password  # for postgres suggested deploy is using certs https://github.com/cloudfoundry/postgres-release#enabling-ssl-on-the-postgresql-server
-          permissions:
-            - "SUPERUSER"
+        roles:
+          - name: bamboo
+            password: password  # for postgres suggested deploy is using certs https://github.com/cloudfoundry/postgres-release#enabling-ssl-on-the-postgresql-server
     provides:
       postgres:
         as: postgres-database
