@@ -37,8 +37,5 @@ properties:
     description: Use http or https on master
     default: http
   server.context:
-    description: The server context of bamboo. It is important to only include the leading slash (i.e. /builds). Empty/non-existent implies root (domain.com/)
+    description: The server context of bamboo. It is important to only include the leading slash (i.e. /builds). Empty/non-existent value implies root (domain.com/)
     default:
-  bamboo.license:
-    description: The License String for this Bamboo Instance
-    default: AAAA-notlicensed-ZZZ

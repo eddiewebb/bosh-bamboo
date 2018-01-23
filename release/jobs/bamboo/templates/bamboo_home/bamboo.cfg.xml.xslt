@@ -27,8 +27,8 @@ relatively consistent, using all other values as provide by install -->
             not(@name='hibernate.connection.username') and
             not(@name='hibernate.connection.password') and
             not(@name='hibernate.connection.dialect') and
-            not(@name='bamboo.jms.broker.client.uri') and
-            not(@name='license.string')  ]"/>
+            not(@name='bamboo.jms.broker.client.uri')
+          ]"/>
 
       <property name="hibernate.c3p0.acquire_increment">3</property>
       <property name="hibernate.c3p0.idle_test_period">30</property>
@@ -42,7 +42,6 @@ relatively consistent, using all other values as provide by install -->
       <property name="hibernate.connection.url">jdbc:postgresql://<%= link('data-db').instances[0].address %>:<%= link('data-db').p('databases.port') %>/bamboo</property>
       <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
       <property name="bamboo.jms.broker.client.uri">failover:(tcp://<%= spec.ip %>:54663?wireFormat.maxInactivityDuration=300000)?initialReconnectDelay=15000&amp;maxReconnectAttempts=10</property>
-      <property name="license.string"><%= p("bamboo.license") %></property>
     </properties>
   </xsl:template>
 </xsl:stylesheet>
