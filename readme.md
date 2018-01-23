@@ -1,49 +1,42 @@
 # bosh deployment with Bambo Agent APIs
-THis project uses bosh as well as [agent apis for bamboo](https://bitbucket.org/eddiewebb/bamboo-agent-apis) to support administration of a large scale Bamboo build farm.
-
-![Adds workload and capacity intelligence to pool of bamboo agents](/material/images/aafb-agent-marked-disabled.png)
+This project is mostly a proof of concepts that uses bosh as well as [agent apis for bamboo](https://bitbucket.org/eddiewebb/bamboo-agent-apis) to support administration of a large scale Bamboo build farm.
 
 
 
 ## Features
 - Allows fully automated upgrades to all remote agents with a single command `bosh deploy`
-- Intelligently manages lifecyle of build agents
+- Intelligently manages lifecycle of build agents
  - will wait for existing builds to complete
  - mark agent disabled
+   ![Agents are marked disabled while current workload completes before being destroyed/updated](/material/images/aafb-agent-marked-disabled.png)
  - take agent offline, upgrade/replace
  - bring agent online
  - `bosh start` will mark agent enabled check for any open tasks to complete (see api docs)
 - Uses persistent store for consistent agent IDs as they update over time
-- Same feature when scaling down! agents wait for running jobs before halting/deleting![deletes and halts wait for running bamboo jobs](/material/images/aafb-delete-wait.png)
-- Sets agent name in Bamboo to the job instance container id. ![AGent names in bamboo match bosh container id](/material/images/aafb-agent-ids-match-bamboo.png)
+- Same feature when scaling down! agents wait for running jobs before halting/deleting
+![deletes and halts wait for running bamboo jobs](/material/images/aafb-delete-wait.png)
 
-## Examples
-After deploy is iniated agents wait for running jobs to complete, and will mark themselves online again once complete.
-![jobs will wait for running work on stop](/material/images/aafb-stop-log.png)
 
-```
-root@d62ed5e7-6b2e-492a-b4e6-42a3a13e5763:/var/vcap/bosh_ssh/bosh_x1exbggvs#
-Sat Sep 24 23:37:15 UTC 2016
-Sat Sep 24 23:37:15 UTC 2016 Agent CTL Script
-Sat Sep 24 23:37:15 UTC 2016 starting...
-Sat Sep 24 23:37:15 UTC 2016 restoring agent config from persistent disk
-Sat Sep 24 23:37:15 UTC 2016 api enabled, closing open tasks and enabling agent
-Sat Sep 24 23:37:15 UTC 2016 No open tasks, normal startup
-Sat Sep 24 23:37:15 UTC 2016 Enable API returned:
-Sat Sep 24 23:37:15 UTC 2016 {"id":4161548,"name":"BOSH: d88f8e67-bcf0-456b-9e46-ab3e720ba6b4 (2)","enabled":true,"busy":true,"online":true}
-Sat Sep 24 23:37:15 UTC 2016 starting agent in JVM wrapper
-```
+- Sets agent name in Bamboo to the job instance container id. ![Agent names in bamboo match bosh container id](/material/images/aafb-agent-ids-match-bamboo.png)
+
+## Tech used
+- BOSH provides main orchestration of services
+- monit provides service monitoring and automated restarts
+- Java used in [related Bamboo plugin](https://bitbucket.org/eddiewebb/bamboo-agent-apis)
+- Python, Bash/Shell and various linux tools support scripts
+
 
 # Building & Deploying the Release
 
-1) Install Bosh-lite based on vendor docs (this repo assumes default network on virtualbox defined there)
-1) Download JDK8 and Atlassian Bamboo from vendor sites.  If they differ than those defined in [blobs.yml](release/config/blobs.yml) then you'll need to update file names and possibly some templates.
-2) Run [buildAndDeployRelease](buildAndDeployRelease.sh)
- 1) uploads stemcells
- 2) sets cloud config for network and vminfo
- 3) uploads community [postgres releases](https://github.com/cloudfoundry/postgres-release)
- 4) builds and uploads this [bamboo releases](release)
- 5) Triggers initial deploy of [sample manifest](manifest.yml)
+1. Install Bosh-lite based on vendor docs (this repo assumes default network on virtualbox defined there)
+1. Download JDK8 and Atlassian Bamboo from vendor sites.  If they differ than those defined in [blobs.yml](release/config/blobs.yml) then you'll need to update file names and possibly some templates.
+2. Run [`./buildAndDeployRelease --us --postgre --alias --route`](buildAndDeployRelease.sh)
+ 1. uploads stemcells
+ 2. sets cloud config for network and vminfo
+ 3. uploads community [postgres releases](https://github.com/cloudfoundry/postgres-release)
+ 4. builds and uploads this [bamboo releases](release)
+ 5. Triggers initial deploy of [sample manifest](manifest.yml)
+ 6. to iterate development re-run the build script omitting flags. [`./buildAndDeployRelease`](buildAndDeployRelease.sh)
 
 
 ### Note on Blob versions

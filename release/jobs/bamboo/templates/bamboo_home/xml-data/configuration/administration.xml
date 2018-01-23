@@ -1,5 +1,5 @@
 <AdministrationConfiguration>
-  <myBaseUrl><%= spec.ip %>:<%= p("server.port") %></myBaseUrl>
+  <myBaseUrl><%= spec.ip %>:<%= p("server.port") %><% if_p('server.context') do |value| %><%= value %><% end %></myBaseUrl>
   <myUseGzipCompression>true</myUseGzipCompression>
   <myInstanceName>Atlassian Bamboo</myInstanceName>
   <deploymentExpiryEnabled>true</deploymentExpiryEnabled>

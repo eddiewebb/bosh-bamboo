@@ -7,7 +7,7 @@
 uuid="<%= p("api.token.uuid") %>"
 
 # URl of master server
-bambooUrl="<%= link('bamboo-server').p("server.protocol") %>://<%= link('bamboo-server').instances[0].address %>:<%= link('bamboo-server').p("server.port") %><%= link('bamboo-server').if_p("server.context") %>"
+bambooUrl="<%= link('bamboo-server').p("server.protocol") %>://<%= link('bamboo-server').instances[0].address %>:<%= link('bamboo-server').p("server.port") %><% link('bamboo-server').if_p('server.context') do |prop| %><%= prop %><% end %>"
 
 # Agent ID can be hard coded, but is easily pulled from the running system
 agentId=`cat /var/vcap/data/bamboo-agent/bamboo-agent.cfg.xml | grep -oPm1 "(?<=<id>)[^<]+"`

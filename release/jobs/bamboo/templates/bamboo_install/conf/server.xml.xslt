@@ -11,7 +11,7 @@ relatively consistent, using all other values as provide by install -->
     </xsl:copy>
   </xsl:template>
 
-  <xsl:template match="Connector">
+  <xsl:template match="Server/Service/Connector">
     <Connector
         protocol="HTTP/1.1"
         port="<%= p("server.port") %>"
@@ -33,9 +33,9 @@ relatively consistent, using all other values as provide by install -->
   </xsl:template>
 
 
-  <xsl:template match="Connector">
+  <xsl:template match="Context">
 
-    <Context path="<%= if_p("server.context") %>" docBase="${catalina.home}/atlassian-bamboo" reloadable="false" useHttpOnly="true">
+    <Context path="<% if_p('server.context') do |value| %><%= value %><% end %>" docBase="\${{catalina.home}}/atlassian-bamboo" reloadable="false" useHttpOnly="true">
       <Manager pathname=""/>
     </Context>
   </xsl:template>

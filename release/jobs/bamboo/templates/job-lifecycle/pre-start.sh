@@ -16,8 +16,6 @@ mkdir -p $RUN_DIR $LOG_DIR $STORE_DIR
 chown -R vcap:vcap $RUN_DIR $LOG_DIR $STORE_DIR
 
 apt-get update
-apt-get --yes --force-yes install postgresql-client-9.6
-apt-get --yes --force-yes install git
 apt-get --yes --force-yes install xsltproc
 
 # Bosh places our template files in /var/vcap/jobs/bamboo.
@@ -25,8 +23,8 @@ apt-get --yes --force-yes install xsltproc
 
 #replace COnnector and Context in vendors server.xml
 BAM_XML=$PACKAGE_DIR/conf/server.xml #default provided by this release
-xsltproc -o $PACKAGE_DIR/conf/server.xml $JOB_DIR/bamboo_install/conf/server.xml.xslt ${BAM_XML}
-:q
+mv ${BAM_XML} ${BAM_XML}.bak
+xsltproc -o $PACKAGE_DIR/conf/server.xml $JOB_DIR/bamboo_install/conf/server.xml.xslt ${BAM_XML}.bak
 
 #bamboo.cfg is a bit trickier as bamboo creates it on first load.
 if [ -f $STORE_DIR/bamboo.cfg.xml ];then # subsequent starts

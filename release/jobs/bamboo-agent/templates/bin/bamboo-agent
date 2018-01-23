@@ -15,7 +15,7 @@ PIDFILE=/var/vcap/data/bamboo-agent/bin/bamboo-agent.pid
 export PATH=/var/vcap/packages/jdk8/bin:$PATH
 export JAVA_HOME=/var/vcap/packages/jdk8/jre
 
-
+BAMB_URL=<%= link('bamboo-server').p("server.protocol") %>://<%= link('bamboo-server').instances[0].address %>:<%= link('bamboo-server').p("server.port") %><% link('bamboo-server').if_p('server.context') do |prop| %><%= prop %><% end %>
 
 #send all output from this file to one log.
 logit() { while IFS='' read -r line; do echo "$(date +'%Y-%m-%d %T') $line" >> ${LOG_DIR}/bamboo-ctl.log; done; };
@@ -57,8 +57,8 @@ case $1 in
         echo "No existing config, will create skeleton"
         java -jar \
             -Dbamboo.home=$BAMBOO_HOME \
-            /var/vcap/packages/bamboo-agent/atlassian-bamboo-agent-installer-5.9.7.jar \
-            <%= link('bamboo-server').p("server.protocol") %>://<%= link('bamboo-server').instances[0].address %>:<%= link('bamboo-server').p("server.port") %><%= link('bamboo-server').if_p("server.context") %>/agentServer/ \
+            /var/vcap/packages/bamboo-agent/atlassian-bamboo-agent-installer-6.2.9.jar \
+            ${BAMB_URL}/agentServer/ \
             install >&3 2>&4
     fi
     # set name to something useful
@@ -66,8 +66,8 @@ case $1 in
     echo "starting agent in JVM wrapper"
     java -jar \
         -Dbamboo.home=$BAMBOO_HOME \
-        /var/vcap/packages/bamboo-agent/atlassian-bamboo-agent-installer-5.9.7.jar \
-        <%= link('bamboo-server').p("server.protocol") %>://<%= link('bamboo-server').instances[0].address %>:<%= link('bamboo-server').p("server.port") %><%= link('bamboo-server').if_p("server.context") %>/agentServer/ \
+        /var/vcap/packages/bamboo-agent/atlassian-bamboo-agent-installer-6.2.9.jar \
+        ${BAMB_URL}/agentServer/ \
          >&3 2>&4
     echo "done"
     ;;
@@ -83,8 +83,8 @@ case $1 in
     fi
     #ask agent to shutdown nicely
     java -jar \
-        /var/vcap/packages/bamboo-agent/atlassian-bamboo-agent-installer-5.9.7.jar \
-         <%= link('bamboo-server').p("server.protocol") %>://<%= link('bamboo-server').instances[0].address %>:<%= link('bamboo-server').p("server.port") %><%= link('bamboo-server').if_p("server.context") %>/agentServer/ \
+        /var/vcap/packages/bamboo-agent/atlassian-bamboo-agent-installer-6.2.9.jar \
+         ${BAMB_URL}/agentServer/ \
         stop >&3 2>&4
     echo "Asked wrapper to stop, will sleep 10 seconds before hard kill"
     sleep 10
