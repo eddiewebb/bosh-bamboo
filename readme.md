@@ -1,5 +1,23 @@
+
 # bosh deployment with Bambo Agent APIs
 This project is mostly a proof of concepts that uses bosh as well as [agent apis for bamboo](https://bitbucket.org/eddiewebb/bamboo-agent-apis) to support administration of a large scale Bamboo build farm.
+
+<!-- TOC START min:1 max:3 link:true update:true -->
+- [bosh deployment with Bambo Agent APIs](#bosh-deployment-with-bambo-agent-apis)
+  - [Features](#features)
+  - [Tech used](#tech-used)
+  - [Action Shots](#action-shots)
+- [Building & Deploying the Release](#building--deploying-the-release)
+    - [Note on Blob versions](#note-on-blob-versions)
+    - [Build release and push to bosh director](#build-release-and-push-to-bosh-director)
+  - [Manifest Values](#manifest-values)
+  - [References](#references)
+    - [Networking](#networking)
+    - [Lifecycle](#lifecycle)
+    - [Bosh VM Directories](#bosh-vm-directories)
+  - [TODOs](#todos)
+
+<!-- TOC END -->
 
 
 
