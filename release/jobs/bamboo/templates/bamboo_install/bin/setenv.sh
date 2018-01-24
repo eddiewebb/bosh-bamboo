@@ -3,9 +3,9 @@
 
 
 #
-#  Occasionally Atlassian Support may recommend that you set some specific JVM arguments.  You can use this variable below to do that.
+#  NOTE: these are aggressively low timings to expediate demonstration of agents joining and dropping. A real environment would be times ~10x this.
 #
-JVM_SUPPORT_RECOMMENDED_ARGS=""
+JVM_SUPPORT_RECOMMENDED_ARGS="-Dbamboo.agent.heartbeatInterval=5 -Dbamboo.agent.heartbeatTimeoutSeconds=10 -Dbamboo.agent.heartbeatCheckInterval=3"
 
 #
 # The following 2 settings control the minimum and maximum given to the Bamboo Java virtual machine.  In larger Bamboo instances, the maximum amount will need to be increased.

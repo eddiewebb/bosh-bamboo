@@ -7,7 +7,7 @@
 set -e
 
 # Cloud config specifies network, vm sizes, etc.
-bosh -e vbox update-cloud-config cloud-config-vbox.yml
+bosh -e vbox update-cloud-config cloud-config-vbox.yml -n
 #provide stemcell,get latest URL for "warden bosh-lite" from bosh.io
 if [[ $* == *--us* ]];then
   echo "Uploading stemcell"
@@ -37,7 +37,7 @@ popd
 
 
 #deploy!
-bosh -e vbox -d bamboo deploy manifest.yml --recreate
+bosh -e vbox -d bamboo deploy manifest.yml --recreate -n
 
 
 if [[ $* == *--alias* ]];then

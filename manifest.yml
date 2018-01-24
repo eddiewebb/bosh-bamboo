@@ -14,7 +14,7 @@ releases:
 
 update:
   canaries: 1
-  max_in_flight: 1 #Should be a small portion of overall capacity to minmize disruption
+  max_in_flight: 6 #Should be a small portion of overall capacity to minmize disruption
   canary_watch_time: 1000-600000 # give up to 10 minutes for any running jobs
   update_watch_time: 1000-600000 # give up to 10 minutes for any running jobs
   serial: false
@@ -42,7 +42,6 @@ instance_groups:
         port: 1999
 - name: agents
   instances: 2
-  # replace with a VM type from your BOSH Director's cloud config
   vm_type: default
   persistent_disk_type: default
   stemcell: trusty
