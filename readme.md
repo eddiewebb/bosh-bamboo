@@ -1,23 +1,26 @@
 
-# bosh deployment with Bambo Agent APIs
-This project is mostly a proof of concepts that uses bosh as well as [agent apis for bamboo](https://bitbucket.org/eddiewebb/bamboo-agent-apis) to support administration of a large scale Bamboo build farm.
+# Summary
+bosh deployment  of Atlassian Bamboo and remote agents with  orchestration support from Bamboo Agent APIs
+This project is mostly a proof of concepts that uses [bosh](https://bosh.io/docs) as well as [agent apis for bamboo](https://bitbucket.org/eddiewebb/bamboo-agent-apis) to support administration of a large scale Bamboo build farm.
 
-<!-- TOC START min:1 max:3 link:true update:true -->
-- [bosh deployment with Bambo Agent APIs](#bosh-deployment-with-bambo-agent-apis)
-  - [Features](#features)
-  - [Tech used](#tech-used)
-  - [Action Shots](#action-shots)
-- [Building & Deploying the Release](#building--deploying-the-release)
-    - [Note on Blob versions](#note-on-blob-versions)
-    - [Build release and push to bosh director](#build-release-and-push-to-bosh-director)
-  - [Manifest Values](#manifest-values)
-  - [References](#references)
-    - [Networking](#networking)
-    - [Lifecycle](#lifecycle)
-    - [Bosh VM Directories](#bosh-vm-directories)
-  - [TODOs](#todos)
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
-<!-- TOC END -->
+- [Summary](#summary)
+	- [Features](#features)
+	- [Tech used](#tech-used)
+	- [Action Shots](#action-shots)
+- [Building & Deploying the Release](#building-deploying-the-release)
+	- [Note on Blob versions](#note-on-blob-versions)
+	- [Build release and push to bosh director](#build-release-and-push-to-bosh-director)
+	- [Manifest Values](#manifest-values)
+- [References](#references)
+	- [Networking](#networking)
+	- [Lifecycle](#lifecycle)
+		- [Stopping](#stopping)
+	- [Bosh VM Directories](#bosh-vm-directories)
+- [TODOs](#todos)
+
+<!-- /TOC -->
 
 
 
@@ -34,7 +37,7 @@ This project is mostly a proof of concepts that uses bosh as well as [agent apis
 
 ## Tech used
 - BOSH provides main orchestration of services
-- monit provides service monitoring and automated restarts
+- [monit](https://mmonit.com/monit/) provides service monitoring and automated restarts
 - Java used in [related Bamboo plugin](https://bitbucket.org/eddiewebb/bamboo-agent-apis)
 - Python, Bash/Shell and various linux tools support scripts
 
@@ -60,11 +63,11 @@ BOSH drain scripts for agents block for any running workloads to complete
  6. to iterate development re-run the build script omitting flags. [`./buildAndDeployRelease`](buildAndDeployRelease.sh)
 
 
-### Note on Blob versions
+## Note on Blob versions
 You'll need to download jdk8 and the atlassian bamboo version to match those found in [blobs.yml](release/config/blobs.yml). You may manually add them using CLI, or leave them in `~/Downloads` for the [setup script](buildAndDeployRelease.sh) to add them as part of setup.
 
 
-### Build release and push to bosh director
+## Build release and push to bosh director
 See bosh-lite docks for quick setup, or target your existing director
 
 See `buildAndDeployRelease.sh` for individual steps, or run it to deploy the current config.
@@ -78,16 +81,16 @@ See `buildAndDeployRelease.sh` for individual steps, or run it to deploy the cur
  - `canaries` - 1 is fine, bosh release should include all smoke tests ot use on start
 
 
-## References
+# References
 
-### Networking
+## Networking
 This approach to virtualbox networking is a result of my learnings on https://github.com/eddiewebb/concourse-pipeline-bosh-virtualbox
 
-### Lifecycle
+## Lifecycle
 Understanding the lifecycle of BOSH jobs is critical to understand how this plugin interacts with the APIS at the right times, as well as the proper design of job specs.
 https://bosh.io/docs/job-lifecycle.html
 
-#### Stopping
+### Stopping
 - monit unmonitor is called for each process
 - drain scripts run for all jobs on the VM in parallel
   (waits for all drain scripts to finish)
@@ -97,7 +100,7 @@ https://bosh.io/docs/job-lifecycle.html
 
 
 
-### Bosh VM Directories
+## Bosh VM Directories
 Useful info for troubleshooting.
  i.e. `bosh -e vbox -d bamboo ssh bamboo-server`
 https://bosh.io/docs/vm-config.html
@@ -111,7 +114,7 @@ https://bosh.io/docs/vm-config.html
 /var/vcap/sys/log/: Directory that is used by the release jobs to keep logs. Each release job usually creates a sub-folder with its name for namespacing (e.g. redis-server will place data into /var/vcap/sys/log/redis-server). Files in this directory are log rotated on a specific schedule configure by the Agent.
 
 
-## TODOs
+# TODOs
 1) Script to setup agent tokens and rules
 2) Install agent API plugins
 3) Separate agent API job/specialites from bamboo with bosh "operator" files provided by CLI v2
